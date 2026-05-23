@@ -8,7 +8,7 @@
             --bg-deep: #071f1d;
             --accent-pink: #ffb7d5;
         }
-        body { margin: 0; background: var(--bg-deep); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        body { margin: 0; background: var(--bg-deep); color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
 
         /* GALAXIA INFINITA */
         #galaxy-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
@@ -26,8 +26,14 @@
         /* TIENDA */
         #shop { display: none; min-height: 100vh; padding: 50px; z-index: 5; position: relative; background: radial-gradient(circle at 50% 50%, #1c4d4a, var(--bg-deep)); }
         #category-title { text-align: center; color: var(--accent-pink); font-size: 3rem; margin-bottom: 40px; text-transform: uppercase; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 50px; }
         .product-card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; border: 1px solid var(--accent-pink); }
+
+        /* INFO IMPORTANTE */
+        #info-container { background: rgba(7, 31, 29, 0.8); padding: 40px; border-top: 2px solid var(--accent-pink); margin-top: 50px; text-align: center; }
+        .info-grid { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+        .info-item { width: 250px; }
+        .info-item h3 { color: var(--accent-pink); }
     </style>
 </head>
 <body>
@@ -51,17 +57,32 @@
     <div id="shop">
         <h2 id="category-title">Catálogo</h2>
         <div class="product-grid" id="product-grid"></div>
+
+        <section id="info-container">
+            <h2 style="color: var(--accent-pink);">Información Importante</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Envíos</h3>
+                    <p>Realizamos envíos a todo el país. Consultá costos.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Pagos</h3>
+                    <p>Aceptamos transferencias, Mercado Pago y efectivo.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Contacto</h3>
+                    <p>¿Dudas? Escribinos al WhatsApp oficial.</p>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script>
         function showShop() {
             document.getElementById('home').style.display = 'none';
             document.getElementById('shop').style.display = 'block';
-            
-            // Mostramos el sidebar pero NO le agregamos la clase 'active'
             document.getElementById('sidebar').style.display = 'block';
             document.getElementById('menu-toggle').style.display = 'block';
-            
             loadCategory('Catálogo Completo');
         }
 
@@ -69,8 +90,6 @@
             document.getElementById('category-title').innerText = cat;
             const grid = document.getElementById('product-grid');
             grid.innerHTML = `<div class="product-card"><h3>Próximamente</h3><p>Productos de ${cat} en camino...</p></div>`;
-            
-            // Cerramos el sidebar tras elegir una opción para que el usuario vea mejor el catálogo
             document.getElementById('sidebar').classList.remove('active');
         }
 
