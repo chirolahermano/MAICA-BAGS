@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Maica Bags</title>
+    <style>
+        :root {
+            --bg-deep: #071f1d;
+            --accent-pink: #ffb7d5;
+        }
+        body { margin: 0; background: var(--bg-deep); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+
+        /* GALAXIA INFINITA */
+        #galaxy-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+
+        /* HOME */
+        #home { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1; position: relative; }
+        .brand-title { color: var(--accent-pink); font-size: 5rem; margin-bottom: 20px; text-shadow: 0 0 20px var(--accent-pink); }
+        .btn { padding: 15px 40px; background: var(--accent-pink); color: black; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+
+        /* SIDEBAR Y MENU */
+        #sidebar { position: fixed; left: -250px; top: 0; width: 250px; height: 100%; background: rgba(10, 38, 36, 0.98); border-right: 2px solid var(--accent-pink); transition: 0.3s; z-index: 20; display: none; padding-top: 80px; }
+        #sidebar.active { left: 0; }
+        .menu-btn { display: block; padding: 15px; text-decoration: none; background: var(--accent-pink); color: black; font-weight: bold; margin: 10px; border-radius: 5px; text-align: center; cursor: pointer; }
+
+        /* TIENDA */
+        #shop { display: none; min-height: 100vh; padding: 50px; z-index: 5; position: relative; background: radial-gradient(circle at 50% 50%, #1c4d4a, var(--bg-deep)); }
+        #category-title { text-align: center; color: var(--accent-pink); font-size: 3rem; margin-bottom: 40px; text-transform: uppercase; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .product-card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; border: 1px solid var(--accent-pink); }
+    </style>
+</head>
+<body>
+
+    <canvas id="galaxy-canvas"></canvas>
+
+    <div id="home">
+        <h1 class="brand-title">MAICA BAGS</h1>
+        <button class="btn" onclick="showShop()">Ver Productos</button>
+    </div>
+
+    <button id="menu-toggle" style="display:none; position:fixed; top:20px; left:20px; z-index:21; background:var(--accent-pink); color:black; border:none; padding:10px; cursor:pointer; font-weight:bold; border-radius:5px;" onclick="toggleSidebar()">☰ Menú</button>
+    
+    <div id="sidebar">
+        <a class="menu-btn" onclick="loadCategory('Carteras')">Carteras</a>
+        <a class="menu-btn" onclick="loadCategory('Cartucheras')">Cartucheras</a>
+        <a class="menu-btn" onclick="loadCategory('Riñoneras')">Riñoneras</a>
+        <a class="menu-btn" onclick="loadCategory('Morrales')">Morrales</a>
+    </div>
+
+    <div id="shop">
+        <h2 id="category-title">Catálogo</h2>
+        <div class="product-grid" id="product-grid"></div>
+    </div>
+
+    <script>
+        function showShop() {
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('shop').style.display = 'block';
+            
+            // Mostramos el sidebar pero NO le agregamos la clase 'active'
+            document.getElementById('sidebar').style.display = 'block';
+            document.getElementById('menu-toggle').style.display = 'block';
+            
+            loadCategory('Catálogo Completo');
+        }
+
+        function loadCategory(cat) {
+            document.getElementById('category-title').innerText = cat;
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = `<div class="product-card"><h3>Próximamente</h3><p>Productos de ${cat} en camino...</p></div>`;
+            
+            // Cerramos el sidebar tras elegir una opción para que el usuario vea mejor el catálogo
+            document.getElementById('sidebar').classList.remove('active');
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+        // GALAXIA
+        const canvas = document.getElementById('galaxy-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = resize; resize();
+
+        function createParticles() {
+            particles = [];
+            for(let i=0; i<200; i++) {
+                particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2, speed: Math.random() * 0.5 });
+            }
+        }
+        function animate() {
+            ctx.fillStyle = '#071f1d'; ctx.fillRect(0,0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffb7d5';
+            particles.forEach(p => {
+                p.y -= p.speed;
+                if(p.y < 0) p.y = canvas.height;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        createParticles(); animate();
+    </script>
+</body>
+</html>
